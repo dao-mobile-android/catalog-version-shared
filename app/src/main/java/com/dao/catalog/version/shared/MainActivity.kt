@@ -84,37 +84,40 @@ fun CatalogApp() {
                 GradleProfileCard()
             }
 
-            listOf(PLUGINS, LIBRARIES).forEach { catalog ->
-                catalog.forEach { (group, dependenciesMap) ->
-                    item {
-                        SectionHeader("$group (${dependenciesMap.size})")
-                    }
-                    items(dependenciesMap.entries.toList()) { entry ->
-                        UpdateItem(alias = entry.key, dependency = entry.value)
-                    }
-                }
+            item {
+                SectionHeader("PLUGINS (${PLUGINS.size})")
             }
 
-            BUNDLES.forEach { (group, catalog) ->
-                item {
-                    SectionHeader("$group (${catalog.size})")
-                }
+            items(PLUGINS.entries.toList()) { entry ->
+                UpdateItem(alias = entry.key, dependency = entry.value)
+            }
 
-                catalog.forEach { (bundle, dependenciesMap) ->
-                    item {
-                        Text(
-                            text = bundle,
-                            style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(start = 24.dp, end = 24.dp, top = 8.dp),
-                            color = MaterialTheme.colorScheme.secondary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    items(dependenciesMap.entries.toList()) { entry ->
-                        UpdateItem(alias = entry.key, dependency = entry.value)
-                    }
+            item {
+                SectionHeader("LIBRARIES (${LIBRARIES.size})")
+            }
+
+            items(LIBRARIES.entries.toList()) { entry ->
+                UpdateItem(alias = entry.key, dependency = entry.value)
+            }
+
+            item {
+                SectionHeader("BUNDLES (${BUNDLES.size})")
+            }
+
+            BUNDLES.forEach { (alias, dependencies) ->
+                item {
+                    Text(
+                        text = alias,
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 24.dp, end = 24.dp, top = 8.dp),
+                        color = MaterialTheme.colorScheme.secondary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                items(dependencies.entries.toList()) { entry ->
+                    UpdateItem(alias = entry.key, dependency = entry.value)
                 }
             }
         }
@@ -139,19 +142,21 @@ fun AutoResizingText(
     text: AnnotatedString,
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.bodyMedium,
-    color: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+    color: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+    fontWeight: FontWeight? = null,
+    maxLines: Int = 1
 ) {
-    var fontSize by remember { mutableStateOf(style.fontSize) }
-    var readyToDraw by remember { mutableStateOf(false) }
+    var fontSize by remember(text, style) { mutableStateOf(style.fontSize) }
+    var readyToDraw by remember(text, style) { mutableStateOf(false) }
 
     Text(
         text = text,
         modifier = modifier.drawWithContent {
             if (readyToDraw) drawContent()
         },
-        style = style.copy(fontSize = fontSize),
+        style = style.copy(fontSize = fontSize, fontWeight = fontWeight ?: style.fontWeight),
         color = color,
-        maxLines = 1,
+        maxLines = maxLines,
         softWrap = false,
         onTextLayout = { textLayoutResult ->
             if (textLayoutResult.hasVisualOverflow && fontSize.isSp && fontSize.value > 6f) {
@@ -179,7 +184,8 @@ fun UpdateItem(alias: String, dependency: String) {
         AutoResizingText(
             text = AnnotatedString(dependency),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1
         )
         Spacer(modifier = Modifier.height(8.dp))
         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
@@ -289,16 +295,24 @@ fun GradleProfileCard() {
     }
 }
 
+@Preview(
+    showBackground = true,
+    name = "Light Theme Preview",
+    uiMode = Configuration.UI_MODE_TYPE_NORMAL
+)
 @Composable
-@Preview(showBackground = true, name = "Light Theme Preview", uiMode = Configuration.UI_MODE_TYPE_NORMAL)
 fun LightThemePreview() {
     CatalogVersionSharedTheme(darkTheme = false) {
         CatalogApp()
     }
 }
 
+@Preview(
+    showBackground = true,
+    name = "Dark Theme Preview",
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
-@Preview(showBackground = true, name = "Dark Theme Preview", uiMode = Configuration.UI_MODE_NIGHT_YES)
 fun DarkThemePreview() {
     CatalogVersionSharedTheme(darkTheme = true) {
         CatalogApp()
