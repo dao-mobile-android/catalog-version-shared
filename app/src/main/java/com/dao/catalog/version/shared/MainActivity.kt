@@ -34,16 +34,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,12 +85,12 @@ fun CatalogApp() {
             }
 
             listOf(PLUGINS, LIBRARIES).forEach { catalog ->
-                catalog.forEach { (group, dependencies) ->
+                catalog.forEach { (group, dependenciesMap) ->
                     item {
-                        SectionHeader("$group (${dependencies.size})")
+                        SectionHeader("$group (${dependenciesMap.size})")
                     }
-                    items(dependencies) { dependency ->
-                        UpdateItem(text = AnnotatedString(dependency))
+                    items(dependenciesMap.toList()) { (alias, dependency) ->
+                        UpdateItem(alias = alias, dependency = dependency)
                     }
                 }
             }
@@ -97,17 +100,23 @@ fun CatalogApp() {
                     SectionHeader("$group (${catalog.size})")
                 }
 
-
                 catalog.forEach { (bundle, dependencies) ->
                     item {
-                        UpdateItem(
-                            buildAnnotatedString {
-                                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                                    append(bundle)
-                                }
-                                append(dependencies)
-                            }
+                        Text(
+                            text = bundle,
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 24.dp, end = 24.dp, top = 8.dp),
+                            color = MaterialTheme.colorScheme.secondary,
+                            fontWeight = FontWeight.Bold
                         )
+                    }
+                    items(dependencies) { item ->
+                        val parts = item.split("|")
+                        val alias = parts.getOrNull(0) ?: ""
+                        val dependency = parts.getOrNull(1) ?: ""
+                        UpdateItem(alias = alias, dependency = dependency)
                     }
                 }
             }
@@ -129,16 +138,51 @@ fun SectionHeader(title: String) {
 }
 
 @Composable
-fun UpdateItem(text: AnnotatedString) {
+fun AutoResizingText(
+    text: AnnotatedString,
+    modifier: Modifier = Modifier,
+    style: TextStyle = MaterialTheme.typography.bodyMedium,
+    color: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+) {
+    var fontSize by remember { mutableStateOf(style.fontSize) }
+    var readyToDraw by remember { mutableStateOf(false) }
+
+    Text(
+        text = text,
+        modifier = modifier.drawWithContent {
+            if (readyToDraw) drawContent()
+        },
+        style = style.copy(fontSize = fontSize),
+        color = color,
+        maxLines = 1,
+        softWrap = false,
+        onTextLayout = { textLayoutResult ->
+            if (textLayoutResult.hasVisualOverflow && fontSize.isSp && fontSize.value > 6f) {
+                fontSize = (fontSize.value * 0.9f).sp
+            } else {
+                readyToDraw = true
+            }
+        }
+    )
+}
+
+@Composable
+fun UpdateItem(alias: String, dependency: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
         Text(
-            text = text,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+            text = alias,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        AutoResizingText(
+            text = AnnotatedString(dependency),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Spacer(modifier = Modifier.height(8.dp))
         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)

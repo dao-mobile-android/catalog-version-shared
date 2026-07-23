@@ -5,126 +5,51 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
-//private val dependencies = immutableMapBuilder {
-//    project.extensions.getByType<VersionCatalogsExtension>()
-//        .forEach { catalog ->
-//            val configuration = project.configurations.detachedConfiguration()
-//
-//            catalog.libraryAliases.forEach { alias ->
-//                catalog.findLibrary(alias).ifPresent { provider ->
-//                    configuration.dependencies.add(
-//                        if (alias.endsWith(".bom")) {
-//                            project.dependencies.platform(provider.get())
-//                        } else {
-//                            project.dependencies.create(provider.get())
-//                        }
-//                    )
-//                }
-//            }
-//
-//            val resolved = configuration.resolvedConfiguration.lenientConfiguration
-//                .allModuleDependencies.associateBy { it.module.id.module.toString() }
-//
-//            put(
-//                "PLUGINS",
-//                catalog.pluginAliases
-//                    .asSequence()
-//                    .map(catalog::findPlugin)
-//                    .map(Optional<Provider<PluginDependency>>::get)
-//                    .map(Provider<PluginDependency>::get)
-//                    .map(PluginDependency::toString)
-//                    .sorted()
-//                    .toList()
-//            )
-//
-//            put(
-//                "LIBRARIES",
-//                catalog.libraryAliases
-//                    .asSequence()
-//                    .map(catalog::findLibrary)
-//                    .filter(Optional<*>::isPresent)
-//                    .map(Optional<Provider<MinimalExternalModuleDependency>>::get)
-//                    .map(Provider<MinimalExternalModuleDependency>::get)
-//                    .mapNotNull { dependency -> resolved[dependency.module.toString()] }
-//                    .map(ResolvedDependency::getName)
-//                    .sorted()
-//                    .toList()
-//            )
-//
-//            put(
-//                "BUNDLES",
-//                catalog.bundleAliases
-//                    .asSequence()
-//                    .map(catalog::findBundle)
-//                    .map(Optional<Provider<ExternalModuleDependencyBundle>>::get)
-//                    .flatMap(Provider<ExternalModuleDependencyBundle>::get)
-//                    .map(MinimalExternalModuleDependency::getName)
-//                    .sorted()
-//                    .toList()
-//            )
-//        }
-//}.let { dependencies ->
-//    """
-//        java.util.Map.of(${
-//        dependencies.entries
-//            .joinToString(separator = ",\n") { (key, values) ->
-//                """
-//                    "$key",
-//                    ${values.joinToString(prefix = "java.util.List.of(\"", postfix = "\")", separator = "\", \"")}
-//                """
-//            }
-//    })
-//    """.trimIndent()
-//}
-
-private val plugins: MutableMap<String, List<String>> = mutableMapOf()
-private val libraries: MutableMap<String, List<String>> = mutableMapOf()
+private val plugins: MutableMap<String, Map<String, String>> = mutableMapOf()
+private val libraries: MutableMap<String, Map<String, String>> = mutableMapOf()
 private val bundles: MutableMap<String, Map<String, List<String>>> = mutableMapOf()
 
-private fun Map<String, List<String>>.asString(): String {
+private fun mapOfStrings(map: Map<String, String>): String {
+    if (map.isEmpty()) return "java.util.Map.of()"
+    return "java.util.Map.ofEntries(${
+        map.entries.joinToString(separator = ",\n") { (k, v) ->
+            "java.util.Map.entry(\"$k\", \"$v\")"
+        }
+    })"
+}
+
+private fun mapOfLists(map: Map<String, List<String>>): String {
+    if (map.isEmpty()) return "java.util.Map.of()"
+    return "java.util.Map.ofEntries(${
+        map.entries.joinToString(separator = ",\n") { (k, v) ->
+            "java.util.Map.entry(\"$k\", java.util.List.of(${v.joinToString { "\"$it\"" }}))"
+        }
+    })"
+}
+
+private fun Map<String, Map<String, String>>.asMapString(): String {
     return """
         java.util.Map.of(${
         entries
-            .joinToString(separator = ",\n") { (key, values) ->
+            .joinToString(separator = ",\n") { (key, map) ->
                 """
                 "$key",
-                ${
-                    values.joinToString(
-                        prefix = "java.util.List.of(\"",
-                        postfix = "\")",
-                        separator = "\", \""
-                    )
-                }
+                ${mapOfStrings(map)}
             """
             }
     })
     """.trimIndent()
 }
 
-private fun Map<String, Map<String, List<String>>>.asContentString(): String {
+private fun Map<String, Map<String, List<String>>>.asBundleString(): String {
     return """
         java.util.Map.of(${
         entries
-            .joinToString(separator = ",\n") { (key, values) ->
+            .joinToString(separator = ",\n") { (key, map) ->
                 """
-                    "$key",
-                    java.util.Map.of(${
-                    values.entries
-                        .joinToString(separator = ",\n") { (key, values) ->
-                            """
-                                "$key",
-                                ${
-                                    values.joinToString(
-                                    prefix = "\"\\n",
-                                    postfix = "\"",
-                                    separator = "\\n",
-                                    transform = { "• $it" }
-                                )
-                            }
-                            """
-                        }
-                })
-                """
+                "$key",
+                ${mapOfLists(map)}
+            """
             }
     })
     """.trimIndent()
@@ -149,33 +74,26 @@ project.extensions.getByType<VersionCatalogsExtension>()
         val resolved = configuration.resolvedConfiguration.lenientConfiguration
             .allModuleDependencies.associateBy { it.module.id.module.toString() }
 
-        plugins["PLUGINS"] = catalog.pluginAliases
-            .asSequence()
-            .map(catalog::findPlugin)
-            .map(Optional<Provider<PluginDependency>>::get)
-            .map(Provider<PluginDependency>::get)
-            .map(PluginDependency::toString)
-            .sorted()
-            .toList()
+        val libraryAliasMap = catalog.libraryAliases.associateBy { alias ->
+            catalog.findLibrary(alias).get().get().module.toString()
+        }
 
-        libraries["LIBRARIES"] = catalog.libraryAliases
-            .asSequence()
-            .map(catalog::findLibrary)
-            .filter(Optional<*>::isPresent)
-            .map(Optional<Provider<MinimalExternalModuleDependency>>::get)
-            .map(Provider<MinimalExternalModuleDependency>::get)
-            .mapNotNull { dependency -> resolved[dependency.module.toString()] }
-            .map(ResolvedDependency::getName)
-            .sorted()
-            .toList()
+        plugins["PLUGINS"] = catalog.pluginAliases.associateWith { alias ->
+            catalog.findPlugin(alias).get().get().toString()
+        }.toSortedMap()
+
+        libraries["LIBRARIES"] = catalog.libraryAliases.associateWith { alias ->
+            val dependency = catalog.findLibrary(alias).get().get()
+            resolved[dependency.module.toString()]?.name ?: dependency.toString()
+        }.toSortedMap()
 
         bundles["BUNDLES"] = catalog.bundleAliases.associateWith { alias ->
-            catalog.findBundle(alias)
-                .map(Provider<ExternalModuleDependencyBundle>::get)
-                .map { bundle -> bundle.map(MinimalExternalModuleDependency::getName) }
-                .map(List<String>::sorted)
-                .get()
-        }
+            catalog.findBundle(alias).get().get().map { dependency ->
+                val aliasInCatalog = libraryAliasMap[dependency.module.toString()] ?: "unknown"
+                val depString = resolved[dependency.module.toString()]?.name ?: dependency.toString()
+                "$aliasInCatalog|$depString"
+            }.sorted()
+        }.toSortedMap()
     }
 
 android {
@@ -188,28 +106,22 @@ android {
         applicationId = "com.dao.catalog.version.shared"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-//        buildConfigField(
-//            "java.util.Map<String, java.util.List<String>>",
-//            "CATALOG_VERSIONS",
-//            plugins.asString()
-//        )
-
         buildConfigField(
-            "java.util.Map<String, java.util.List<String>>",
+            "java.util.Map<String, java.util.Map<String, String>>",
             "PLUGINS",
-            plugins.asString()
-        )
-
-        buildConfigField(
-            "java.util.Map<String, java.util.List<String>>",
-            "LIBRARIES",
-            libraries.asString()
+            plugins.asMapString()
         )
 
         buildConfigField(
             "java.util.Map<String, java.util.Map<String, String>>",
+            "LIBRARIES",
+            libraries.asMapString()
+        )
+
+        buildConfigField(
+            "java.util.Map<String, java.util.Map<String, java.util.List<String>>>",
             "BUNDLES",
-            bundles.asContentString()
+            bundles.asBundleString()
         )
     }
 
