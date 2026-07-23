@@ -1,5 +1,3 @@
-import java.util.Optional
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -7,52 +5,40 @@ plugins {
 
 private val plugins: MutableMap<String, Map<String, String>> = mutableMapOf()
 private val libraries: MutableMap<String, Map<String, String>> = mutableMapOf()
-private val bundles: MutableMap<String, Map<String, List<String>>> = mutableMapOf()
+private val bundles: MutableMap<String, Map<String, Map<String, String>>> = mutableMapOf()
 
 private fun mapOfStrings(map: Map<String, String>): String {
     if (map.isEmpty()) return "java.util.Map.of()"
-    return "java.util.Map.ofEntries(${
-        map.entries.joinToString(separator = ",\n") { (k, v) ->
-            "java.util.Map.entry(\"$k\", \"$v\")"
-        }
-    })"
+    val indent = "      "
+    return "java.util.Map.ofEntries(\n" +
+            map.entries.joinToString(separator = ",\n") { (k, v) ->
+                "${indent}java.util.Map.entry(\"$k\", \"$v\")"
+            } + ")"
 }
 
-private fun mapOfLists(map: Map<String, List<String>>): String {
+private fun mapOfMaps(map: Map<String, Map<String, String>>): String {
     if (map.isEmpty()) return "java.util.Map.of()"
-    return "java.util.Map.ofEntries(${
-        map.entries.joinToString(separator = ",\n") { (k, v) ->
-            "java.util.Map.entry(\"$k\", java.util.List.of(${v.joinToString { "\"$it\"" }}))"
-        }
-    })"
+    val indent = "      "
+    return "java.util.Map.ofEntries(\n" +
+            map.entries.joinToString(separator = ",\n") { (k, v) ->
+                "${indent}java.util.Map.entry(\"$k\", ${mapOfStrings(v)})"
+            } + ")"
 }
 
 private fun Map<String, Map<String, String>>.asMapString(): String {
-    return """
-        java.util.Map.of(${
-        entries
-            .joinToString(separator = ",\n") { (key, map) ->
-                """
-                "$key",
-                ${mapOfStrings(map)}
-            """
-            }
-    })
-    """.trimIndent()
+    val indent = "      "
+    return "java.util.Map.of(\n" +
+            entries.joinToString(separator = ",\n") { (key, map) ->
+                "${indent}\"$key\",\n${indent}${mapOfStrings(map)}"
+            } + ")"
 }
 
-private fun Map<String, Map<String, List<String>>>.asBundleString(): String {
-    return """
-        java.util.Map.of(${
-        entries
-            .joinToString(separator = ",\n") { (key, map) ->
-                """
-                "$key",
-                ${mapOfLists(map)}
-            """
-            }
-    })
-    """.trimIndent()
+private fun Map<String, Map<String, Map<String, String>>>.asBundleString(): String {
+    val indent = "      "
+    return "java.util.Map.of(\n" +
+            entries.joinToString(separator = ",\n") { (key, map) ->
+                "${indent}\"$key\",\n${indent}${mapOfMaps(map)}"
+            } + ")"
 }
 
 project.extensions.getByType<VersionCatalogsExtension>()
@@ -88,11 +74,12 @@ project.extensions.getByType<VersionCatalogsExtension>()
         }.toSortedMap()
 
         bundles["BUNDLES"] = catalog.bundleAliases.associateWith { alias ->
-            catalog.findBundle(alias).get().get().map { dependency ->
+            catalog.findBundle(alias).get().get().associate { dependency ->
                 val aliasInCatalog = libraryAliasMap[dependency.module.toString()] ?: "unknown"
-                val depString = resolved[dependency.module.toString()]?.name ?: dependency.toString()
-                "$aliasInCatalog|$depString"
-            }.sorted()
+                val depString =
+                    resolved[dependency.module.toString()]?.name ?: dependency.toString()
+                aliasInCatalog to depString
+            }.toSortedMap()
         }.toSortedMap()
     }
 
@@ -119,7 +106,7 @@ android {
         )
 
         buildConfigField(
-            "java.util.Map<String, java.util.Map<String, java.util.List<String>>>",
+            "java.util.Map<String, java.util.Map<String, java.util.Map<String, String>>>",
             "BUNDLES",
             bundles.asBundleString()
         )

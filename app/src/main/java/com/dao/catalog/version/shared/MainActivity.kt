@@ -89,8 +89,8 @@ fun CatalogApp() {
                     item {
                         SectionHeader("$group (${dependenciesMap.size})")
                     }
-                    items(dependenciesMap.toList()) { (alias, dependency) ->
-                        UpdateItem(alias = alias, dependency = dependency)
+                    items(dependenciesMap.entries.toList()) { entry ->
+                        UpdateItem(alias = entry.key, dependency = entry.value)
                     }
                 }
             }
@@ -100,7 +100,7 @@ fun CatalogApp() {
                     SectionHeader("$group (${catalog.size})")
                 }
 
-                catalog.forEach { (bundle, dependencies) ->
+                catalog.forEach { (bundle, dependenciesMap) ->
                     item {
                         Text(
                             text = bundle,
@@ -112,11 +112,8 @@ fun CatalogApp() {
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    items(dependencies) { item ->
-                        val parts = item.split("|")
-                        val alias = parts.getOrNull(0) ?: ""
-                        val dependency = parts.getOrNull(1) ?: ""
-                        UpdateItem(alias = alias, dependency = dependency)
+                    items(dependenciesMap.entries.toList()) { entry ->
+                        UpdateItem(alias = entry.key, dependency = entry.value)
                     }
                 }
             }
