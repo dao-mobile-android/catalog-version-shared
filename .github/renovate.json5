@@ -1,6 +1,7 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: ['github>dao-mobile-android/renovate-config:default.json5'],
+  updateNotScheduled: true,
   schedule: ['any time'],
   prCreation: "immediate",
   prConcurrentLimit: 0,
