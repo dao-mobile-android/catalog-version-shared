@@ -54,7 +54,8 @@
       groupName: 'Gradle',
       automergeType: 'squash',
       ignoreTests: true,
-      automerge: true
+      automerge: true,
+      enabled: true,
     },
     {
       // GitHub Actions (Major, Minor, Patch)
