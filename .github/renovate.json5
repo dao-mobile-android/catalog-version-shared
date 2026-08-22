@@ -6,6 +6,9 @@
   schedule: [
     'at any time',
   ],
+  constraints: {
+    java: '21'
+  },
   timezone: 'America/Sao_Paulo',
   packageRules: [
     {
