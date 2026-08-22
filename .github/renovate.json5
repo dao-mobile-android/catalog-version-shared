@@ -9,6 +9,10 @@
   timezone: 'America/Sao_Paulo',
   packageRules: [
     {
+      matchDepNames: ['*'],
+      enabled: false,
+    },
+    {
       matchManagers: [
         'gradle',
       ],
