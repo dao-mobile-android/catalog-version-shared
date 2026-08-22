@@ -1,4 +1,100 @@
 {
-  $schema: 'https://renovatebot.com',
-  extends: ['github>dao-mobile-android/renovate-config:default.json5']
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  description: 'Configuração centralizada do Renovate para Projetos Android',
+
+  extends: [
+    'config:recommended',
+    ':dependencyDashboard',
+    'helpers:pinGitHubActionDigests',
+  ],
+
+//  schedule: ['every 2 weeks on sunday after 3:00am and before 5:00am'],
+  updateNotScheduled: true,
+  schedule: ['any time'],
+  prCreation: "immediate",
+
+  timezone: 'America/Sao_Paulo',
+  prConcurrentLimit: 3,
+  prHourlyLimit: 1,
+
+  lockFileMaintenance: {
+    enabled: true,
+  },
+
+  // Em branches protegidas, o PR é obrigatório.
+  // platformAutomerge fará o merge automático via GitHub assim que o CI passar.
+  automerge: true,
+  automergeType: 'pr',
+  platformAutomerge: true,
+//  minimumReleaseAge: '2 days',
+  persistedCredentialsLoadOnce: true,
+//  prCreation: "status-success",
+
+  branchName: 'renovate/{{groupSlug}}',
+  commitMessage: 'chore(deps): update {{lowercase groupName}}',
+  commitBody: '| Package | Current | New Version |\n|---|---|---|\n{{#each upgrades}}| `{{depName}}` | `{{currentVersion}}` | `{{newVersion}}` |\n{{/each}}',
+
+  packageRules: [
+    {
+      // Major: define revisores (caso o PR precise ser aberto)
+      reviewers: ['@diogo0liveira'],
+      matchUpdateTypes: ['major'],
+    },
+    {
+      // Third-party Libraries (Major, Minor, Patch)
+      matchManagers: ['gradle'],
+      groupName: 'Third-party Libraries',
+    },
+    {
+      // Android Gradle Plugin (AGP)
+      matchPackageNames: ['com.android.tools.build:gradle'],
+      groupName: 'Android Gradle Plugin',
+    },
+    {
+      // Jetpack Compose (Major, Minor, Patch)
+      matchManagers: ['gradle'],
+      matchPackagePrefixes: [
+        'androidx.compose',
+        'androidx.activity:activity-compose',
+        'androidx.lifecycle:lifecycle-runtime-compose',
+        'androidx.lifecycle:lifecycle-viewmodel-compose',
+        'androidx.navigation:navigation-compose',
+        'androidx.hilt:hilt-navigation-compose',
+        'androidx.paging:paging-compose',
+      ],
+      groupName: 'Compose Libraries',
+    },
+    {
+      // Android Libraries (Major, Minor, Patch)
+      matchManagers: ['gradle'],
+      matchPackagePrefixes: [
+        'androidx.',
+        'com.google.android.'
+      ],
+      groupName: 'Android Libraries',
+    },
+    {
+      // Kotlin Ecosystem (Major, Minor, Patch)
+      matchManagers: ['gradle'],
+      matchPackagePrefixes: [
+        'org.jetbrains.kotlin'
+      ],
+      groupName: 'Kotlin Ecosystem',
+    },
+    {
+      // Gradle (Major, Minor, Patch)
+      matchManagers: ['gradle-wrapper'],
+      groupName: 'Gradle',
+    },
+    {
+      // GitHub Actions (Major, Minor, Patch)
+      matchManagers: ['github-actions'],
+      groupName: 'GitHub Actions',
+      automerge: true,
+    },
+  ],
+  vulnerabilityAlerts: {
+    labels: ['security'],
+    assignees: ['@diogo0liveira'],
+  },
 }
