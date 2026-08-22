@@ -50,6 +50,7 @@
 
   semanticCommits: 'enabled',
   platformAutomerge: true,
+  recreateClosed: true,
   automergeType: 'pr',
   automerge: true,
 
