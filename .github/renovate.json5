@@ -36,6 +36,7 @@
       branchTopic: 'android-plugins',
 
       automerge: true,
+      recreateWhen: 'always',
       automergeType: 'squash',
       platformAutomerge: true
     },
