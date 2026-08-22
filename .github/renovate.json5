@@ -8,9 +8,13 @@
     java: '21',
   },
   timezone: 'America/Sao_Paulo',
+  dependencyDashboardTitle: 'Renovate — Dependencies Panel',
   dependencyDashboard: true,
-  dependencyDashboardTitle: 'Renovate — Dependencies Panel (AGP)',
   semanticCommits: 'enabled',
+  platformAutomerge: true,
+  recreateWhen: 'always',
+  ignoreTests: true,
+  automerge: true,
   packageRules: [
     {
       matchPackageNames: [
@@ -60,8 +64,4 @@
       automerge: true,
     }
   ],
-  platformAutomerge: true,
-  recreateWhen: 'always',
-  ignoreTests: true,
-  automerge: true
 }
