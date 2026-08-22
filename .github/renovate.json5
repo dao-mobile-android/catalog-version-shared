@@ -38,7 +38,8 @@
       automerge: true,
       recreateWhen: 'always',
       automergeType: 'squash',
-      platformAutomerge: true
+      platformAutomerge: true,
+      requiredStatusChecks: null,
     },
   ]
 }
