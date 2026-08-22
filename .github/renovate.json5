@@ -29,7 +29,7 @@
       ],
       enabled: true,
       ignoreUnstable: false,
-      matchUpdateTypes: ['major', 'minor', 'patch'],
+//      matchUpdateTypes: ['major', 'minor', 'patch'],
       groupName: 'Android Gradle Plugin (AGP)',
       groupSlug: 'android-plugins',
       commitMessageTopic: 'Android Gradle Plugin (AGP)',
