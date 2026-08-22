@@ -1,60 +1,43 @@
-//{
-//  $schema: 'https://renovatebot.com',
-//  extends: ['github>dao-mobile-android/renovate-config:default.json5']
-//}
-
 {
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
-
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
     'config:best-practices',
   ],
-
   schedule: [
     'at any time',
   ],
-
-  timezone: "America/Sao_Paulo",
-
+  timezone: 'America/Sao_Paulo',
   packageRules: [
     {
       matchManagers: [
-        "gradle"
+        'gradle',
       ],
-
       matchDepNames: [
-        "com.android.tools.build:gradle",
-        "com.android.dynamic-feature",
-        "com.android.application",
-        "com.android.library",
-        "com.android.test"
+        'com.android.tools.build:gradle',
+        'com.android.dynamic-feature',
+        'com.android.application',
+        'com.android.library',
+        'com.android.test',
       ],
-
       matchUpdateTypes: [
-        "major",
-        "minor",
-        "patch",
+        'major',
+        'minor',
+        'patch',
       ],
-
-      groupName: "Android Gradle Plugin (AGP)",
-      groupSlug: "android-plugins",
-
-      commitMessageTopic: "Android Gradle Plugin (AGP)",
-      branchTopic: "android-plugins",
-      enabled: true
+      groupName: 'Android Gradle Plugin (AGP)',
+      groupSlug: 'android-plugins',
+      commitMessageTopic: 'Android Gradle Plugin (AGP)',
+      branchTopic: 'android-plugins',
+      enabled: true,
     },
   ],
-
-  dependencyDashboardTitle: "Renovate — Dependencies Panel (AGP)",
+  dependencyDashboardTitle: 'Renovate — Dependencies Panel (AGP)',
   dependencyDashboard: true,
-
   semanticCommits: 'enabled',
   platformAutomerge: true,
-  recreateClosed: true,
+  recreateWhen: 'always',
   automergeType: 'pr',
   automerge: true,
-
   prConcurrentLimit: 0,
   prHourlyLimit: 0,
 }
-
