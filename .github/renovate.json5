@@ -19,10 +19,13 @@
     {
       matchDepNames: [
         'com.android.tools.build:gradle',
-        'com.android.dynamic-feature',
-        'com.android.application',
-        'com.android.library',
-        'com.android.test',
+      ],
+      matchPackageNames: [
+        'com.android.tools.build:gradle',
+        'com.android.dynamic-feature**',
+        'com.android.application**',
+        'com.android.library**',
+        'com.android.test**',
       ],
       enabled: true,
       matchUpdateTypes: ['major', 'minor', 'patch'],
@@ -31,7 +34,7 @@
       commitMessageTopic: 'Android Gradle Plugin (AGP)',
       branchTopic: 'android-plugins',
     },
-  ],
+  ]
 }
 
 //{
