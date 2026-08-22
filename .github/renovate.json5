@@ -34,19 +34,20 @@
         'com.android.library**',
         'com.android.test**',
       ],
-      groupName: 'Android Gradle Plugin (AGP)',
-      groupSlug: 'android-plugins',
-      commitMessageTopic: 'Android Gradle Plugin (AGP)',
-      branchTopic: 'android-plugins',
       matchUpdateTypes: [
         'major',
         'minor',
         'patch'
       ],
+      commitMessageTopic: 'Android Gradle Plugin (AGP)',
+      branchTopic: 'android-plugins',
+      groupName: 'Android Gradle Plugin (AGP)',
+      groupSlug: 'android-plugins',
       automergeType: 'squash',
       enabled: true,
     },
     {
+      // Gradle
       matchManagers: [
         'gradle-wrapper'
       ],
