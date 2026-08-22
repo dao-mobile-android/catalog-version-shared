@@ -1,3 +1,54 @@
+//{
+//  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+//  extends: [
+//    'config:best-practices',
+//  ],
+//  schedule: [
+//    'at any time',
+//  ],
+//  constraints: {
+//    java: '21'
+//  },
+//  timezone: 'America/Sao_Paulo',
+//  packageRules: [
+//    {
+//      matchDepNames: ['*'],
+//      enabled: false,
+//    },
+//    {
+//      matchManagers: [
+//        'gradle',
+//      ],
+//      matchDepNames: [
+//        'com.android.tools.build:gradle',
+//        'com.android.dynamic-feature',
+//        'com.android.application',
+//        'com.android.library',
+//        'com.android.test',
+//      ],
+//      matchUpdateTypes: [
+//        'major',
+//        'minor',
+//        'patch',
+//      ],
+//      groupName: 'Android Gradle Plugin (AGP)',
+//      groupSlug: 'android-plugins',
+//      commitMessageTopic: 'Android Gradle Plugin (AGP)',
+//      branchTopic: 'android-plugins',
+//      enabled: true,
+//    },
+//  ],
+//  dependencyDashboardTitle: 'Renovate — Dependencies Panel (AGP)',
+//  dependencyDashboard: true,
+//  semanticCommits: 'enabled',
+//  platformAutomerge: true,
+//  recreateWhen: 'always',
+//  automergeType: 'pr',
+//  automerge: true,
+//  prConcurrentLimit: 0,
+//  prHourlyLimit: 0,
+//}
+
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
@@ -7,18 +58,16 @@
     'at any time',
   ],
   constraints: {
-    java: '21'
+    java: '21',
   },
   timezone: 'America/Sao_Paulo',
   packageRules: [
     {
-      matchDepNames: ['*'],
+      matchPackagePatterns: ['*'],
       enabled: false,
     },
     {
-      matchManagers: [
-        'gradle',
-      ],
+      matchManagers: ['gradle'],
       matchDepNames: [
         'com.android.tools.build:gradle',
         'com.android.dynamic-feature',
@@ -36,7 +85,11 @@
       commitMessageTopic: 'Android Gradle Plugin (AGP)',
       branchTopic: 'android-plugins',
       enabled: true,
-    },
+
+      automergeType: 'branch',
+      ignoreTests: true,
+      automerge: true,
+    }
   ],
   dependencyDashboardTitle: 'Renovate — Dependencies Panel (AGP)',
   dependencyDashboard: true,
