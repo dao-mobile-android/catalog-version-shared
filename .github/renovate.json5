@@ -1,7 +1,9 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   // extends: ['config:best-practices'],
-  schedule: ['at any time'],
+  schedule: [
+    'at any time'
+  ],
   constraints: {
     java: '21',
   },
@@ -10,13 +12,14 @@
   dependencyDashboardTitle: 'Renovate — Dependencies Panel (AGP)',
   semanticCommits: 'enabled',
   packageRules: [
-    // 1. Regra Global: Desativa a atualização de qualquer dependência por padrão
     {
-      matchPackageNames: ['*'],
+      matchPackageNames: [
+        '*'
+      ],
       enabled: false,
     },
-    // 2. Lista de Permissões: Reativa explicitamente apenas os pacotes do AGP
     {
+      // Android Gradle Plugin (AGP)
       matchDepNames: [
         'com.android.tools.build:gradle',
       ],
@@ -27,75 +30,38 @@
         'com.android.library**',
         'com.android.test**',
       ],
-      enabled: true,
-      ignoreUnstable: false,
-//      matchUpdateTypes: ['major', 'minor', 'patch'],
       groupName: 'Android Gradle Plugin (AGP)',
       groupSlug: 'android-plugins',
       commitMessageTopic: 'Android Gradle Plugin (AGP)',
       branchTopic: 'android-plugins',
-
-      automerge: true,
-      recreateWhen: 'always',
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch'
+      ],
       automergeType: 'squash',
-      platformAutomerge: true,
-      requiredStatusChecks: null,
+      enabled: true,
     },
-  ]
+    {
+      matchManagers: [
+        'gradle-wrapper'
+      ],
+      groupName: 'Gradle',
+      automergeType: 'squash',
+      automerge: true
+    },
+    {
+      // GitHub Actions (Major, Minor, Patch)
+      matchManagers: [
+        'github-actions'
+      ],
+      groupName: 'GitHub Actions',
+      automergeType: 'squash',
+      automerge: true,
+    }
+  ],
+  platformAutomerge: true,
+  recreateWhen: 'always',
+  ignoreTests: true,
+  automerge: true
 }
-
-//{
-//  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
-//  extends: [
-//    'config:best-practices',
-//  ],
-//  schedule: [
-//    'at any time',
-//  ],
-//  constraints: {
-//    java: '21',
-//  },
-//  timezone: 'America/Sao_Paulo',
-//  packageRules: [
-//    {
-//      enabled: false,
-//      matchPackageNames: [
-//        '*',
-//      ],
-//    },
-//    {
-//      matchManagers: [
-//        'gradle',
-//      ],
-//      matchDepNames: [
-//        'com.android.tools.build:gradle',
-//        'com.android.dynamic-feature',
-//        'com.android.application',
-//        'com.android.library',
-//        'com.android.test',
-//      ],
-//      matchUpdateTypes: [
-//        'major',
-//        'minor',
-//        'patch',
-//      ],
-//      groupName: 'Android Gradle Plugin (AGP)',
-//      groupSlug: 'android-plugins',
-//      commitMessageTopic: 'Android Gradle Plugin (AGP)',
-//      branchTopic: 'android-plugins',
-//      enabled: true,
-//      automergeType: 'branch',
-//      ignoreTests: true,
-//      automerge: true,
-//    },
-//  ],
-//  dependencyDashboardTitle: 'Renovate — Dependencies Panel (AGP)',
-//  dependencyDashboard: true,
-//  semanticCommits: 'enabled',
-//  platformAutomerge: true,
-//  recreateWhen: 'always',
-//  automergeType: 'pr',
-//  automerge: true,
-//  prConcurrentLimit: 0,
-//  prHourlyLimit: 0,
-//}
