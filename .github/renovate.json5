@@ -1,0 +1,4 @@
+{
+  $schema: 'https://renovatebot.com',
+  extends: ['github>dao-mobile-android/renovate-config:default.json5']
+}
