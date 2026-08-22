@@ -28,6 +28,7 @@
         'com.android.test**',
       ],
       enabled: true,
+      ignoreUnstable: false,
       matchUpdateTypes: ['major', 'minor', 'patch'],
       groupName: 'Android Gradle Plugin (AGP)',
       groupSlug: 'android-plugins',
