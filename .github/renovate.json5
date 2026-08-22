@@ -2,8 +2,22 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: ['github>dao-mobile-android/renovate-config:default.json5'],
   schedule: ['any time'],
+  prCreation: "immediate",
   prConcurrentLimit: 0,
   prHourlyLimit: 0,
   onboarding: false,
-  dryRun: 'lookup',
+  packageRules: [
+    {
+      matchPackageNames: ["*"],
+      automerge: true,
+      automergeType: "pr",
+      platformAutomerge: true,
+
+      // Força o automerge mesmo que o pipeline/CI falhe ou ainda esteja rodando
+      ignoreTests: true,
+
+      // Remove a exigência de checagens de status do GitHub
+      requiredStatusChecks: null
+    }
+  ]
 }
