@@ -19,7 +19,7 @@
   packageRules: [
     {
       matchManagers: [
-        "gradle",
+        "gradle"
       ],
 
       matchDepNames: [
@@ -30,11 +30,11 @@
         "com.android.test"
       ],
 
-      //      matchUpdateTypes: [
-      //        "major",
-      //        "minor",
-      //        "patch",
-      //      ],
+      matchUpdateTypes: [
+        "major",
+        "minor",
+        "patch",
+      ],
 
       groupName: "Android Gradle Plugin (AGP)",
       groupSlug: "android-plugins",
