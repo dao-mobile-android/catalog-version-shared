@@ -1,0 +1,215 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  // extends: ['config:best-practices'],
+  schedule: [
+    'at any time'
+  ],
+  constraints: {
+    java: '21',
+  },
+  timezone: 'America/Sao_Paulo',
+  dependencyDashboardTitle: 'Renovate — Dependencies Panel',
+  dependencyDashboard: false,
+  semanticCommits: 'enabled',
+  platformAutomerge: true,
+  recreateWhen: 'always',
+  ignoreTests: true,
+  automerge: true,
+  packageRules: [
+    {
+      matchPackageNames: [
+        '*'
+      ],
+      enabled: false,
+    },
+    {
+      // Android Gradle Plugin (AGP) — enable
+      matchPackageNames: [
+        'com.android.tools.build:gradle',
+        'com.android.dynamic-feature**',
+        'com.android.application**',
+        'com.android.settings**',
+        'com.android.library**',
+        'com.android.test**',
+      ],
+      enabled: true,
+    },
+    {
+      // Android Gradle Plugin (AGP) — group
+      matchPackageNames: [
+        'com.android.tools.build:gradle',
+        'com.android.dynamic-feature**',
+        'com.android.application**',
+        'com.android.settings**',
+        'com.android.library**',
+        'com.android.test**',
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      commitMessageTopic: 'Android Gradle Plugin (AGP)',
+      branchTopic: 'android-plugins',
+      groupName: 'Android Gradle Plugin (AGP)',
+      groupSlug: 'android-plugins',
+      automergeType: 'squash',
+    },
+    {
+      // Testing Libraries — enable
+      matchManagers: ['gradle'],
+      matchPackageNames: [
+        'androidx.test.espresso:espresso-core',
+        'androidx.test.ext:junit',
+        'junit:junit',
+      ],
+      enabled: true,
+    },
+    {
+      // Testing Libraries — group
+      matchManagers: ['gradle'],
+      matchPackageNames: [
+        'androidx.test.espresso:espresso-core',
+        'androidx.test.ext:junit',
+        'junit:junit',
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      groupName: 'Testing Libraries',
+      automergeType: 'squash',
+      automerge: true,
+    },
+    {
+      // Android Libraries — enable
+      matchManagers: ['gradle'],
+      matchPackageNames: [
+        'androidx.lifecycle:lifecycle-runtime',
+        'androidx.activity:activity-compose',
+        'androidx.core:core'
+      ],
+      enabled: true,
+    },
+    {
+      // Android Libraries — group
+      matchManagers: ['gradle'],
+      matchPackageNames: [
+        'androidx.lifecycle:lifecycle-runtime',
+        'androidx.activity:activity-compose',
+        'androidx.core:core'
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      groupName: 'AndroidX Core Libraries',
+      automergeType: 'squash',
+      automerge: true,
+    },
+    {
+      // Jetpack Compose — enable
+      matchManagers: ['gradle'],
+      matchPackagePatterns: [
+        '^androidx\\.compose'
+      ],
+      enabled: true,
+    },
+    {
+      // Jetpack Compose — group
+      matchManagers: ['gradle'],
+      matchPackagePatterns: [
+        '^androidx\\.compose'
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      groupName: 'Jetpack Compose',
+      automergeType: 'squash',
+      automerge: true,
+    },
+    {
+      // Kotlin Ecosystem — enable
+      matchManagers: ['gradle'],
+      matchPackagePatterns: [
+        '^org\\.jetbrains\\.kotlin',
+        '^org\\.jetbrains\\.kotlin\\.plugin\\.compose'
+      ],
+      enabled: true,
+    },
+    {
+      // Kotlin Ecosystem — group
+      matchManagers: ['gradle'],
+      matchPackagePatterns: [
+        '^org\\.jetbrains\\.kotlin',
+        '^org\\.jetbrains\\.kotlin\\.plugin\\.compose'
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      groupName: 'Kotlin Ecosystem',
+      automergeType: 'squash',
+      automerge: true,
+    },
+    {
+      // Foojay Resolver Convention — enable
+      matchManagers: ['gradle'],
+      matchPackageNames: [
+        'org.gradle.toolchains.foojay-resolver-convention',
+      ],
+      enabled: true,
+    },
+    {
+      // Foojay Resolver Convention — group
+      matchManagers: ['gradle'],
+      matchPackageNames: [
+        'org.gradle.toolchains.foojay-resolver-convention',
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      groupName: 'Gradle Foojay Resolver',
+      automergeType: 'squash',
+      automerge: true,
+    },
+    {
+      // Gradle wrapper — enable
+      matchManagers: [
+        'gradle-wrapper',
+      ],
+      enabled: true,
+    },
+    {
+      // Gradle wrapper — group
+      matchManagers: [
+        'gradle-wrapper',
+      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
+      groupName: 'Gradle',
+      automergeType: 'squash',
+      automerge: true,
+    },
+    {
+      // GitHub Actions
+      matchManagers: [
+        'github-actions',
+      ],
+      groupName: 'GitHub Actions',
+      automergeType: 'squash',
+      automerge: true,
+      enabled: true
+    }
+  ],
+}

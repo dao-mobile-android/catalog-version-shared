@@ -1,5 +1,5 @@
 [versions]
-agp = "9.4.0-alpha07"
+agp = "9.3.1"
 kotlin = "2.4.10"
 
 android-core = "1.19.0"
@@ -17,8 +17,8 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [libraries]
-android-core = { group = "androidx.core", name = "core-ktx", version.ref = "android-core" }
-android-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "android-lifecycle-runtime" }
+android-core = { group = "androidx.core", name = "core", version.ref = "android-core" }
+android-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "android-lifecycle-runtime" }
 
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
