@@ -13,7 +13,6 @@
   semanticCommits: 'enabled',
   platformAutomerge: true,
   recreateWhen: 'always',
-  ignoreTests: true,
   automerge: true,
   packageRules: [
     {
@@ -44,6 +43,7 @@
       groupName: 'Android Gradle Plugin (AGP)',
       groupSlug: 'android-plugins',
       automergeType: 'squash',
+      ignoreTests: true,
       enabled: true,
     },
     {
@@ -53,6 +53,7 @@
       ],
       groupName: 'Gradle',
       automergeType: 'squash',
+      ignoreTests: true,
       automerge: true
     },
     {
@@ -62,6 +63,7 @@
       ],
       groupName: 'GitHub Actions',
       automergeType: 'squash',
+      ignoreTests: true,
       automerge: true,
     }
   ],
