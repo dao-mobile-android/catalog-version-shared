@@ -1,26 +1,41 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  description: 'Configuração centralizada do Renovate para Projetos Android',
   // extends: ['config:best-practices'],
+
   schedule: [
     'at any time'
   ],
+
   constraints: {
-    java: '21',
+    java: '21'
   },
+
   timezone: 'America/Sao_Paulo',
-  dependencyDashboardTitle: 'Renovate — Dependencies Panel',
-  dependencyDashboard: false,
+  dependencyDashboardTitle: 'Renovate — Dependencies',
+  dependencyDashboard: true,
+//  minimumReleaseAge: '2 days',
   semanticCommits: 'enabled',
   platformAutomerge: true,
   recreateWhen: 'always',
   ignoreTests: true,
   automerge: true,
+
+  prConcurrentLimit: 0,
+  prHourlyLimit: 0,
+
+  //  branchName: 'renovate/{{groupSlug}}',
+  commitMessageAction: "update",
+  commitMessageTopic: "{{lowercase groupName}}",
+  commitMessageExtra: "",
+  commitBody: '| Package | Current | New Version |\n|---|---|---|\n{{#each upgrades}}| `{{depName}}` | `{{currentVersion}}` | `{{newVersion}}` |\n{{/each}}',
+
   packageRules: [
     {
       matchPackageNames: [
         '*'
       ],
-      enabled: false,
+      enabled: false
     },
     {
       // Android Gradle Plugin (AGP) — enable
@@ -30,9 +45,9 @@
         'com.android.application**',
         'com.android.settings**',
         'com.android.library**',
-        'com.android.test**',
+        'com.android.test**'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Android Gradle Plugin (AGP) — group
@@ -42,18 +57,18 @@
         'com.android.application**',
         'com.android.settings**',
         'com.android.library**',
-        'com.android.test**',
+        'com.android.test**'
       ],
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
       commitMessageTopic: 'Android Gradle Plugin (AGP)',
       branchTopic: 'android-plugins',
       groupName: 'Android Gradle Plugin (AGP)',
       groupSlug: 'android-plugins',
-      automergeType: 'squash',
+      automergeType: 'squash'
     },
     {
       // Testing Libraries — enable
@@ -61,9 +76,9 @@
       matchPackageNames: [
         'androidx.test.espresso:espresso-core',
         'androidx.test.ext:junit',
-        'junit:junit',
+        'junit:junit'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Testing Libraries — group
@@ -71,16 +86,16 @@
       matchPackageNames: [
         'androidx.test.espresso:espresso-core',
         'androidx.test.ext:junit',
-        'junit:junit',
+        'junit:junit'
       ],
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
       groupName: 'Testing Libraries',
       automergeType: 'squash',
-      automerge: true,
+      automerge: true
     },
     {
       // Android Libraries — enable
@@ -90,7 +105,7 @@
         'androidx.activity:activity-compose',
         'androidx.core:core'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Android Libraries — group
@@ -103,11 +118,11 @@
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
-      groupName: 'AndroidX Core Libraries',
+      groupName: 'Android Libraries',
       automergeType: 'squash',
-      automerge: true,
+      automerge: true
     },
     {
       // Jetpack Compose — enable
@@ -115,7 +130,7 @@
       matchPackagePatterns: [
         '^androidx\\.compose'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Jetpack Compose — group
@@ -126,11 +141,11 @@
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
       groupName: 'Jetpack Compose',
       automergeType: 'squash',
-      automerge: true,
+      automerge: true
     },
     {
       // Kotlin Ecosystem — enable
@@ -139,7 +154,7 @@
         '^org\\.jetbrains\\.kotlin',
         '^org\\.jetbrains\\.kotlin\\.plugin\\.compose'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Kotlin Ecosystem — group
@@ -151,65 +166,65 @@
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
       groupName: 'Kotlin Ecosystem',
       automergeType: 'squash',
-      automerge: true,
+      automerge: true
     },
     {
       // Foojay Resolver Convention — enable
       matchManagers: ['gradle'],
       matchPackageNames: [
-        'org.gradle.toolchains.foojay-resolver-convention',
+        'org.gradle.toolchains.foojay-resolver-convention'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Foojay Resolver Convention — group
       matchManagers: ['gradle'],
       matchPackageNames: [
-        'org.gradle.toolchains.foojay-resolver-convention',
+        'org.gradle.toolchains.foojay-resolver-convention'
       ],
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
       groupName: 'Gradle Foojay Resolver',
       automergeType: 'squash',
-      automerge: true,
+      automerge: true
     },
     {
       // Gradle wrapper — enable
       matchManagers: [
-        'gradle-wrapper',
+        'gradle-wrapper'
       ],
-      enabled: true,
+      enabled: true
     },
     {
       // Gradle wrapper — group
       matchManagers: [
-        'gradle-wrapper',
+        'gradle-wrapper'
       ],
       matchUpdateTypes: [
         'major',
         'minor',
-        'patch',
+        'patch'
       ],
       groupName: 'Gradle',
       automergeType: 'squash',
-      automerge: true,
+      automerge: true
     },
     {
       // GitHub Actions
       matchManagers: [
-        'github-actions',
+        'github-actions'
       ],
       groupName: 'GitHub Actions',
       automergeType: 'squash',
       automerge: true,
       enabled: true
     }
-  ],
+  ]
 }
