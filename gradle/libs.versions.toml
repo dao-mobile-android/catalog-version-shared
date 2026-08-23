@@ -1,6 +1,6 @@
 [versions]
 agp = "9.3.1"
-kotlin = "2.4.0"
+kotlin = "2.4.10"
 
 android-core = "1.18.0"
 android-lifecycle-runtime = "2.10.0"
