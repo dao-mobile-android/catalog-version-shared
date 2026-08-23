@@ -2,11 +2,11 @@
 agp = "9.3.1"
 kotlin = "2.4.10"
 
-android-core = "1.18.0"
-android-lifecycle-runtime = "2.10.0"
+android-core = "1.19.0"
+android-lifecycle-runtime = "2.11.0"
 
 compose-bom = "2026.08.00"
-compose-activity = "1.12.0"
+compose-activity = "1.13.0"
 
 test-espresso-core = "3.6.1"
 test-junit = "4.13.1"
