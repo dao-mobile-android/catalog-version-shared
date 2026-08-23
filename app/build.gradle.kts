@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.android.core)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     implementation(libs.android.lifecycle.runtime)
