@@ -28,7 +28,7 @@
   commitMessageAction: "update",
   commitMessageTopic: "{{lowercase groupName}}",
   commitMessageExtra: "",
-  commitBody: '{{#each upgrades}}`{{depName}}` - `{{currentVersion}}` to `{{newVersion}}`\n{{/each}}',
+  commitBody: '{{#each upgrades}}{{depName}} - {{currentVersion}} to {{newVersion}}\n{{/each}}',
 
   packageRules: [
     {
