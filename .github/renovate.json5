@@ -16,7 +16,6 @@
   dependencyDashboard: true,
 //  minimumReleaseAge: '2 days',
 //  semanticCommits: 'enabled',
-  prCreationOrder: 'lexical',
   platformAutomerge: true,
   recreateWhen: 'always',
   ignoreTests: true,
@@ -37,6 +36,10 @@
         '*'
       ],
       enabled: false
+    },
+    {
+      reviewers: ['@diogo0liveira'],
+      matchUpdateTypes: ['major'],
     },
     {
       // Android Gradle Plugin (AGP) — enable
