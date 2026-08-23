@@ -1,20 +1,29 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  description: 'Configuração centralizada do Renovate para Projetos Android',
   // extends: ['config:best-practices'],
+
   schedule: [
     'at any time'
   ],
+
   constraints: {
     java: '21',
   },
+
   timezone: 'America/Sao_Paulo',
-  dependencyDashboardTitle: 'Renovate — Dependencies Panel',
-  dependencyDashboard: false,
+  dependencyDashboardTitle: 'Renovate — Dependencies',
+  dependencyDashboard: true,
   semanticCommits: 'enabled',
   platformAutomerge: true,
   recreateWhen: 'always',
   ignoreTests: true,
   automerge: true,
+
+//  branchName: 'renovate/{{groupSlug}}',
+  commitMessage: 'chore(deps): update {{lowercase groupName}}',
+  commitBody: '| Package | Current | New Version |\n|---|---|---|\n{{#each upgrades}}| `{{depName}}` | `{{currentVersion}}` | `{{newVersion}}` |\n{{/each}}',
+
   packageRules: [
     {
       matchPackageNames: [
